@@ -1,0 +1,699 @@
+<!--
+  Copyright 2025 Dwi Rachmat Putra
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Link List</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+</head>
+
+<body class="loading">
+
+    <div class="app-container">
+        <!-- Header / Top Bar -->
+        <header class="top-bar">
+            <!-- All controls moved to sidebar -->
+        </header>
+
+        <div class="main-layout">
+            <!-- Sidebar -->
+            <aside class="sidebar" id="sidebar">
+                <nav class="nav-menu">
+                    <!-- Backup Sync Button -->
+                    <div class="nav-item" id="sync-btn">
+                        <span class="material-icons-outlined">cloud_sync</span>
+                        <span class="nav-label">Backup Sync</span>
+                    </div>
+
+                    <!-- Add Link Button -->
+                    <button class="nav-item" id="manual-input-btn">
+                        <span class="material-icons-outlined">add</span>
+                        <span class="nav-label">Add Link</span>
+                    </button>
+
+                    <!-- Grab Tabs Button -->
+                    <button class="nav-item" id="grab-tabs-btn">
+                        <span class="material-icons-outlined">pan_tool</span>
+                        <span class="nav-label">Grab Tabs</span>
+                    </button>
+
+                    <!-- Search Button -->
+                    <div class="nav-item" id="search-btn">
+                        <span class="material-icons-outlined">search</span>
+                        <span class="nav-label">Search</span>
+                    </div>
+
+                    <!-- Labels Section with Inline Actions -->
+                    <div class="nav-section-title">
+                        <span>Labels</span>
+                        <div class="nav-section-actions">
+                            <button class="nav-section-icon-btn" id="add-label-btn" title="Create new label">
+                                <span class="material-icons-outlined">add</span>
+                            </button>
+                            <button class="nav-section-icon-btn" id="manage-label-btn" title="Manage labels">
+                                <span class="material-icons-outlined">settings</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="sidebar-labels">
+                        <!-- Dynamic labels injected here -->
+                    </div>
+
+                    <!-- Quick Labels Button (only visible when collapsed) -->
+                    <div class="nav-item labels-quick-btn" id="labels-quick-btn" style="display: none;">
+                        <span class="material-icons-outlined">label</span>
+                        <span class="nav-label">Labels</span>
+                    </div>
+
+
+                    <!-- Tags Button -->
+                    <div class="nav-item" id="tags-btn">
+                        <span class="material-icons-outlined">tag</span>
+                        <span class="nav-label">Tags</span>
+                    </div>
+
+                    <div class="nav-item" id="delete-btn">
+                        <span class="material-icons-outlined">delete</span>
+                        <span class="nav-label">Trash</span>
+                    </div>
+                </nav>
+
+                <div class="sidebar-bottom" style="padding-right: 16px; margin-bottom: 8px;">
+                    <!-- About LL Button -->
+                    <div class="nav-item" id="about-ll-btn">
+                        <span class="nav-icon-text">LL</span>
+                        <span class="nav-label">About</span>
+                    </div>
+
+                    <!-- Theme Toggle Button -->
+                    <div class="nav-item" id="theme-btn">
+                        <span class="material-icons-outlined">dark_mode</span>
+                        <span class="nav-label">Theme</span>
+                    </div>
+
+                    <!-- Settings Button -->
+                    <div class="nav-item" id="settings-btn">
+                        <span class="material-icons-outlined">settings</span>
+                        <span class="nav-label">Settings</span>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Content Area -->
+            <main class="content-area">
+                <div class="content-wrapper">
+                    <!-- Resizable Container (Split View - Between Sidebar and Main Content) -->
+                    <div class="resizable-container" id="resizable-container">
+                        <!-- Top Section: Unlabeled Links -->
+                        <div class="top-section">
+                            <!-- Tabs Bar (Above Toolbar) -->
+                            <div class="tabs-bar-container" id="tabs-bar-container">
+                                <div class="tabs-bar" id="tabs-bar">
+                                    <!-- Tabs will be dynamically generated here -->
+                                </div>
+                                <div class="tabs-nav-buttons">
+                                    <button class="tabs-nav-btn" id="tabs-nav-left" title="Scroll left">
+                                        <span class="material-icons-outlined">chevron_left</span>
+                                    </button>
+                                    <button class="tabs-nav-btn" id="tabs-nav-right" title="Scroll right">
+                                        <span class="material-icons-outlined">chevron_right</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="toolbar">
+                                <div class="toolbar-left">
+                                    <div class="select-all-dropdown-container">
+                                        <button class="icon-btn" id="select-all-btn" title="Selection options">
+                                            <span class="material-icons-outlined"
+                                                id="select-checkbox-icon">check_box_outline_blank</span>
+                                            <span class="material-icons-outlined dropdown-arrow">arrow_drop_down</span>
+                                        </button>
+                                        <div class="select-dropdown-menu" id="select-dropdown-menu">
+                                            <div class="select-dropdown-item" data-action="all">All</div>
+                                            <div class="select-dropdown-item" data-action="none">None</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="sort-dropdown-container">
+                                        <button class="icon-btn" id="sort-dropdown-btn" title="Sort options">
+                                            <span class="material-icons-outlined">sort</span>
+                                            <span class="material-icons-outlined dropdown-arrow">arrow_drop_down</span>
+                                        </button>
+                                        <div class="sort-dropdown-menu" id="sort-dropdown-menu">
+                                            <div class="sort-dropdown-item" data-sort="date-desc">
+                                                <span class="material-icons-outlined">arrow_downward</span>
+                                                <span>Date (Newest First)</span>
+                                            </div>
+                                            <div class="sort-dropdown-item" data-sort="date-asc">
+                                                <span class="material-icons-outlined">arrow_upward</span>
+                                                <span>Date (Oldest First)</span>
+                                            </div>
+                                            <div class="sort-dropdown-item" data-sort="title-asc">
+                                                <span class="material-icons-outlined">sort_by_alpha</span>
+                                                <span>Title (A-Z)</span>
+                                            </div>
+                                            <div class="sort-dropdown-item" data-sort="title-desc">
+                                                <span class="material-icons-outlined">sort_by_alpha</span>
+                                                <span>Title (Z-A)</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Tags Filter (Inline) -->
+                                    <div class="tags-filter-bar" id="tags-filter-bar" style="display: none;">
+                                        <div class="tags-filter-list" id="tags-filter-list">
+                                            <!-- Tag filters will be generated here -->
+                                        </div>
+                                    </div>
+
+                                    <!-- Selection Actions (Hidden by default) -->
+                                    <div id="selection-actions"
+                                        style="display: none; align-items: center; gap: 8px; margin-left: 8px; padding-left: 8px; border-left: 1px solid var(--border-color);">
+                                        <span id="selection-count"
+                                            style="font-size: 14px; color: var(--text-secondary);"></span>
+                                        <button class="icon-btn" id="move-selected-btn" title="Move to Label">
+                                            <span class="material-icons-outlined">drive_file_move</span>
+                                        </button>
+                                        <button class="icon-btn" id="restore-selected-btn" title="Restore Selected"
+                                            style="display: none;">
+                                            <span class="material-icons-outlined">restore_from_trash</span>
+                                        </button>
+                                        <button class="icon-btn delete-btn" id="delete-selected-btn"
+                                            title="Delete Selected">
+                                            <span class="material-icons-outlined">delete</span>
+                                        </button>
+                                        <button class="icon-btn" id="cancel-selection-btn" title="Cancel Selection"
+                                            style="display: none;">
+                                            <span class="material-icons-outlined">close</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="toolbar-right">
+                                    <span id="data-count-info" class="data-count"></span>
+                                    <button class="icon-btn" id="prev-btn"><span
+                                            class="material-icons-outlined">chevron_left</span></button>
+                                    <button class="icon-btn" id="next-btn"><span
+                                            class="material-icons-outlined">chevron_right</span></button>
+                                </div>
+                            </div>
+
+                            <div class="link-list-container">
+                                <table class="link-table">
+                                    <tbody id="links-tbody">
+                                        <!-- Rows injected here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Bottom Section: Labels List -->
+                        <div class="labels-section" id="labels-section">
+                            <div class="labels-header">
+                                <span class="material-icons-outlined">label</span>
+                                <span>Labels</span>
+                                <div class="labels-actions">
+                                    <button class="icon-btn-small" id="manage-label-from-list" title="Manage labels">
+                                        <span class="material-icons-outlined">settings</span>
+                                    </button>
+                                    <button class="icon-btn-small" id="add-label-from-list" title="Add label">
+                                        <span class="material-icons-outlined">add</span>
+                                    </button>
+                                    <button class="icon-btn-small" id="labels-search-btn" title="Search">
+                                        <span class="material-icons-outlined">search</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="search-input-wrapper" id="labels-search-wrapper" style="display: none;">
+                                <input type="text" class="section-search-input" id="labels-search-input"
+                                    placeholder="Search labels...">
+                                <button class="search-close-btn" id="labels-search-close" title="Close search">
+                                    <span class="material-icons-outlined">close</span>
+                                </button>
+                            </div>
+                            <div class="labels-list" id="labels-list-container">
+                                <!-- Labels will be rendered here -->
+                            </div>
+                        </div>
+
+                        <!-- Bottom Section: Tags List -->
+                        <div class="tags-section" id="tags-section">
+                            <div class="tags-header">
+                                <span class="material-icons-outlined">tag</span>
+                                <span>Tags</span>
+                                <div class="tags-actions">
+                                    <button class="icon-btn-small" id="tags-show-all-btn"
+                                        title="Toggle All/Relevant Tags"
+                                        style="width: auto; padding: 0 8px; font-size: 11px; font-weight: 500;">Rel</button>
+                                    <button class="icon-btn-small" id="tags-search-btn" title="Search">
+                                        <span class="material-icons-outlined">search</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="search-input-wrapper" id="tags-search-wrapper" style="display: none;">
+                                <input type="text" class="section-search-input" id="tags-search-input"
+                                    placeholder="Search tags...">
+                                <button class="search-close-btn" id="tags-search-close" title="Close search">
+                                    <span class="material-icons-outlined">close</span>
+                                </button>
+                            </div>
+                            <div class="tags-list" id="tags-list-container">
+                                <!-- Tags will be rendered here -->
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+            </main>
+
+            <!-- Details Panel -->
+            <div id="details-panel" class="details-panel">
+                <div class="details-header">
+                    <h3>Edit Link</h3>
+                    <button class="icon-btn" id="details-close-btn"><span
+                            class="material-icons-outlined">close</span></button>
+                </div>
+                <div class="details-body">
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input type="text" id="details-title" class="details-input">
+                    </div>
+                    <div class="form-group">
+                        <label>URL</label>
+                        <input type="text" id="details-url" class="details-input">
+                    </div>
+                    <div class="form-group">
+                        <label>Label</label>
+                        <select id="details-label" class="details-input"></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Tags</label>
+                        <div class="tags-input-container">
+                            <div id="details-tags-display" class="tags-display"></div>
+                            <input type="text" id="details-tags-input" class="details-input"
+                                placeholder="Type tag and press Enter">
+                        </div>
+                        <small style="color: var(--text-secondary); font-size: 11px; margin-top: 4px; display: block;">
+                            Press Enter to add tags, click × to remove
+                        </small>
+                    </div>
+                </div>
+                <div class="details-footer">
+                    <button id="details-save-btn" class="primary-btn">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+
+    <!-- Manual Input Modal -->
+    <div id="manual-input-modal" class="modal">
+        <div class="modal-content" style="padding: 16px; max-width: 500px; background: transparent; box-shadow: none;">
+            <input type="text" id="modal-input-el" placeholder="Paste URL and press Enter"
+                style="width: 100%; box-sizing: border-box; padding: 12px 16px; font-size: 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background-color: var(--surface-color); color: var(--text-primary); outline: none; box-shadow: 0 4px 20px rgba(0,0,0,0.5);">
+            <div style="margin-top: 12px; display: flex; justify-content: flex-end;">
+                <button id="paste-btn" class="nav-item"
+                    style="background: rgba(255, 255, 255, 0.05); border-radius: 8px; padding: 8px 12px; border: 1px solid rgba(255,255,255,0.1); cursor: pointer;">
+                    <span class="material-icons-outlined"
+                        style="font-size: 18px; margin-right: 6px;">content_paste</span>
+                    <span style="font-size: 14px;">Paste from Clipboard</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal">
+        <div class="modal-content settings-modal-content">
+            <div class="settings-modal-header">
+                <h3>Settings</h3>
+                <button class="icon-btn" id="settings-modal-close" title="Close">
+                    <span class="material-icons-outlined">close</span>
+                </button>
+            </div>
+
+            <div class="settings-section">
+                <h4>General</h4>
+                <div class="settings-item">
+                    <div class="settings-item-info">
+                        <span class="material-icons-outlined">save</span>
+                        <span class="settings-item-label">Auto-save YT link</span>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="auto-save-toggle">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <div class="settings-item">
+                    <div class="settings-item-info">
+                        <span class="material-icons-outlined">smart_display</span>
+                        <span class="settings-item-label">YT links labeled to song</span>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="youtube-label-toggle">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <div class="settings-item">
+                    <div class="settings-item-info">
+                        <span class="material-icons-outlined">layers</span>
+                        <span class="settings-item-label">Overlay Mode (Show on all tabs)</span>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="overlay-mode-toggle">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <div class="settings-item">
+                    <div class="settings-item-info">
+                        <span class="material-icons-outlined">tab_unselected</span>
+                        <span class="settings-item-label">Tab-List Auto Close</span>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="tab-list-auto-close-toggle">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <h4>Data Management</h4>
+                <div class="settings-actions">
+                    <button class="settings-action-btn" id="export-trigger-btn">
+                        <span class="material-icons-outlined">file_download</span>
+                        <span>Export Links</span>
+                    </button>
+
+                    <button class="settings-action-btn" id="load-btn">
+                        <span class="material-icons-outlined">file_upload</span>
+                        <span>Import from File</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Label Modal -->
+    <div id="label-modal" class="modal">
+        <div class="modal-content" style="padding: 16px; max-width: 500px; background: transparent; box-shadow: none;">
+            <input type="text" id="label-input-el" placeholder="Label Name"
+                style="width: 100%; box-sizing: border-box; padding: 12px 16px; font-size: 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background-color: var(--surface-color); color: var(--text-primary); outline: none; box-shadow: 0 4px 20px rgba(0,0,0,0.5);">
+        </div>
+    </div>
+
+    <!-- Manage Labels Modal -->
+    <div id="manage-label-modal" class="modal">
+        <div class="modal-content" style="padding: 16px; max-width: 500px; background: transparent; box-shadow: none;">
+            <div id="manage-label-list" class="manage-label-list"
+                style="background: var(--surface-color); border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); overflow: hidden;">
+                <!-- Label items injected here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Filter Modal -->
+    <div id="filter-modal" class="modal">
+        <div class="modal-content">
+            <h3>Filter & Sort</h3>
+            <div class="form-group">
+                <label for="filter-label">Label</label>
+                <select id="filter-label" class="details-input"></select>
+            </div>
+            <div class="form-group">
+                <label for="filter-sort">Sort By</label>
+                <select id="filter-sort" class="details-input">
+                    <option value="date-desc">Date (Newest First)</option>
+                    <option value="date-asc">Date (Oldest First)</option>
+                    <option value="title-asc">Title (A-Z)</option>
+                    <option value="title-desc">Title (Z-A)</option>
+                </select>
+            </div>
+            <div class="modal-actions">
+                <button id="filter-cancel-btn" class="text-btn">Cancel</button>
+                <button id="filter-apply-btn" class="primary-btn">Apply</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Move Modal -->
+    <div id="move-modal" class="modal">
+        <div class="modal-content">
+            <h3>Move Selected Links</h3>
+            <div class="form-group">
+                <label for="move-label-select">Select Label</label>
+                <select id="move-label-select" class="details-input"></select>
+            </div>
+            <div class="modal-actions">
+                <button id="move-cancel-btn" class="text-btn">Cancel</button>
+                <button id="move-confirm-btn" class="primary-btn">Move</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Modal -->
+    <div id="delete-modal" class="modal">
+        <div class="modal-content">
+            <h3>Delete All Links?</h3>
+            <p>This action cannot be undone.</p>
+            <div class="modal-actions">
+                <button id="cancel-delete-btn" class="text-btn">Cancel</button>
+                <button id="confirm-delete-btn" class="primary-btn delete-btn">Delete All</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- About Modal -->
+    <div id="about-modal" class="modal">
+        <div class="modal-content">
+            <h3>About</h3>
+            <p id="app-title">Link List</p>
+            <p id="app-description">Save your favorite links and manage them in one place.</p>
+            <p>Version: <span id="app-version">0.0.1</span></p>
+            <p>Author: Dwi Rachmat Putra</p>
+            <div class="modal-actions">
+                <button id="about-close-btn" class="text-btn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tags Modal -->
+    <div id="tags-modal" class="modal">
+        <div class="modal-content tags-modal-content">
+
+            <div class="tags-modal-body">
+                <div class="form-group">
+                    <label>Tags</label>
+                    <div class="tags-modal-display" id="tags-modal-display"></div>
+                </div>
+                <div class="form-group">
+                    <label for="tags-modal-input">Add New Tag</label>
+                    <input type="text" id="tags-modal-input" class="details-input"
+                        placeholder="Type tag name and press Enter">
+                </div>
+                <div class="form-group" id="tags-suggestions-group" style="display: none;">
+                    <label>Suggestions</label>
+                    <div id="tags-suggestions" class="tags-suggestions"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Export Modal -->
+    <div id="export-modal" class="modal">
+        <div class="modal-content minimalist-modal">
+            <h3 class="modal-title-minimal">Export Links</h3>
+            <div class="modal-body minimalist-body">
+                <div class="form-group">
+                    <label for="export-checkbox-container">Select Data to Export</label>
+                    <div id="export-checkbox-container" class="details-input"
+                        style="height: auto; max-height: 200px; overflow-y: auto; padding: 8px;">
+                        <!-- Checkboxes populated by JS -->
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="export-format-select">Format</label>
+                    <select id="export-format-select" class="minimal-select">
+                        <option value="txt">Text File (.txt)</option>
+                        <option value="csv">CSV File (.csv)</option>
+                        <option value="json">JSON File (.json)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer minimalist-footer">
+                <button id="export-confirm-btn" class="action-btn primary full-width">Export</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Edit Link Modal -->
+    <div id="edit-link-modal" class="modal">
+        <div class="modal-content edit-link-modal-content">
+
+            <div class="edit-link-modal-body">
+                <!-- Tags Section -->
+                <div class="form-group">
+                    <label>
+                        <span class="material-icons-outlined">tag</span>
+                        <span>Tags</span>
+                    </label>
+                    <div class="tags-edit-display" id="edit-link-tags-display"></div>
+                    <input type="text" id="edit-link-tags-input" class="details-input"
+                        placeholder="Type tag name and press Enter">
+
+                    <!-- Tag Suggestions -->
+                    <div class="form-group" id="edit-link-tags-suggestions-group"
+                        style="display: none; margin-top: 12px;">
+                        <div class="tags-suggestions-label">Quick add:</div>
+                        <div id="edit-link-tags-suggestions" class="tags-suggestions"></div>
+                    </div>
+                </div>
+
+                <!-- Auto-save indicator -->
+                <div class="auto-save-indicator" id="auto-save-indicator">
+                    <span class="material-icons-outlined">cloud_done</span>
+                    <span>Changes saved automatically</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Note Modal -->
+    <div id="note-modal" class="modal">
+        <div class="modal-content minimalist-modal note-modal-content">
+            <div class="modal-header-minimal" style="justify-content: flex-end; padding-bottom: 0;">
+                <div class="note-header-right">
+                    <span id="note-autosave-status" class="note-autosave-status">Saved</span>
+                </div>
+            </div>
+            <div class="modal-body minimalist-body note-body">
+                <textarea id="note-modal-input" class="note-textarea" placeholder="Type your note here..."></textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmation-modal" class="modal">
+        <div class="modal-content" style="max-width: 400px;">
+            <h3 id="confirm-modal-title" style="margin-top: 0;">Confirm</h3>
+            <p id="confirm-modal-message" style="margin-bottom: 24px; color: var(--text-secondary); line-height: 1.5;">
+                Are you sure?</p>
+            <div class="modal-actions" id="modal-actions-container">
+                <button id="confirm-modal-cancel-btn" class="text-btn">Cancel</button>
+                <button id="confirm-modal-ok-btn" class="primary-btn">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Label Picker Modal -->
+    <div id="label-picker-modal" class="modal">
+        <div class="modal-content">
+
+            <div class="form-group">
+                <label for="label-picker-select">Select a label</label>
+                <select id="label-picker-select" class="details-input"></select>
+            </div>
+            <div class="modal-actions">
+                <button id="label-picker-create-btn" class="text-btn">Create New Label</button>
+                <div style="flex: 1;"></div>
+
+                <button id="label-picker-confirm-btn" class="primary-btn">Apply</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Modal -->
+    <div id="search-modal" class="modal">
+        <div class="modal-content" style="padding: 16px; max-width: 500px; background: transparent; box-shadow: none;">
+            <input type="text" id="search-modal-input" placeholder="Search links..."
+                style="width: 100%; box-sizing: border-box; padding: 12px 16px; font-size: 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background-color: var(--surface-color); color: var(--text-primary); outline: none; box-shadow: 0 4px 20px rgba(0,0,0,0.5);">
+        </div>
+    </div>
+
+    <!-- Quick Labels Modal (for collapsed sidebar) -->
+    <div id="quick-labels-modal" class="modal">
+        <div class="modal-content quick-labels-modal-content">
+            <div class="quick-labels-modal-header">
+                <h3>Labels</h3>
+                <div class="quick-labels-actions">
+                    <button id="quick-labels-create" class="icon-btn" title="Create new label">
+                        <span class="material-icons-outlined">add</span>
+                    </button>
+                    <button id="quick-labels-manage" class="icon-btn" title="Manage labels">
+                        <span class="material-icons-outlined">settings</span>
+                    </button>
+                    <button id="quick-labels-close" class="icon-btn" title="Close">
+                        <span class="material-icons-outlined">close</span>
+                    </button>
+                </div>
+            </div>
+            <div class="quick-labels-list" id="quick-labels-list">
+                <!-- Label items will be dynamically injected here -->
+            </div>
+        </div>
+    </div>
+
+    <div id="grab-tabs-modal" class="modal">
+        <div class="modal-content large-modal grab-tabs-modal-redesign">
+            <div class="modal-body">
+                <div class="form-group">
+
+                    <div class="grab-tabs-list-container" id="grab-tabs-list">
+                        <!-- Tabs will be rendered here with checkboxes -->
+                    </div>
+                </div>
+
+                <div class="form-group">
+
+                    <div class="label-select-with-add"
+                        style="display: flex !important; flex-direction: row !important; gap: 8px; align-items: center;">
+                        <select id="grab-tabs-label-select" class="details-input" style="flex: 1; height: 40px;">
+                            <option value="">No Label (Unlabeled)</option>
+                            <!-- Labels populated dynamically -->
+                        </select>
+                        <button id="grab-tabs-add-label-btn" class="icon-btn" title="Create new label"
+                            style="width: 40px; height: 40px; padding: 0; margin: 0; flex-shrink: 0;">
+                            <span class="material-icons-outlined">add</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <span id="grab-tabs-count" class="grab-tabs-count">0 tabs selected</span>
+                <button id="save-grabbed-tabs-btn" class="primary-btn">Save Selected Tabs</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="sync-utils.js"></script>
+    <script src="oauth.js"></script>
+    <script src="script.js"></script>
+    <script src="grab_dropdown.js"></script>
+</body>
+
+</html>

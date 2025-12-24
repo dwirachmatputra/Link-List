@@ -1,0 +1,48 @@
+{
+  "manifest_version": 3,
+  "name": "Link List",
+  "version": "0.0.1",
+  "description": "Save your favorite links and manage them in one place.",
+  "author": "Dwi Rachmat Putra",
+  "permissions": [
+    "tabs",
+    "storage",
+    "scripting",
+    "contextMenus",
+    "identity",
+    "alarms",
+    "clipboardRead"
+  ],
+  "oauth2": {
+    "client_id": "Put your client ID here",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive.file"
+    ]
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_icon": "img/icon-512x512.png"
+  },
+  "host_permissions": [
+    "<all_urls>",
+    "https://music.youtube.com/*",
+    "https://accounts.google.com/*",
+    "https://www.googleapis.com/*"
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "index.html",
+        "script.js",
+        "styles.css",
+        "overlay-styles.css",
+        "img/*.png"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
+  ]
+}
